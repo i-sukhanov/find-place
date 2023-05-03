@@ -1,3 +1,9 @@
 <template>
-  <div>Admin</div>
+  <MapC editable />
 </template>
+
+<script lang="ts" setup>
+import MapC from '@/components/MapC.vue';
+</script>
+
+<style scoped></style>

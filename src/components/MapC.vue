@@ -5,7 +5,6 @@
 <script lang="ts" setup>
 import { onMounted, defineProps } from 'vue';
 import 'leaflet/dist/leaflet.css';
-
 import { useMap } from '@/composables/useMap';
 
 const props = defineProps({
@@ -15,7 +14,7 @@ const props = defineProps({
   },
 });
 
-const { initMap } = useMap(props);
+const { initMap, pins } = useMap(props);
 
 onMounted(initMap);
 </script>

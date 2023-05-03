@@ -1,7 +1,14 @@
 import { createApp } from 'vue';
+import { createPinia } from 'pinia';
 import App from './App.vue';
 import './registerServiceWorker';
 import router from './router';
 import '@/assets/css/main.css';
+const pinia = createPinia();
 
-createApp(App).use(router).mount('#app');
+const app = createApp(App);
+
+app.use(router);
+app.use(pinia);
+
+app.mount('#app');

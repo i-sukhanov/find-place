@@ -14,7 +14,7 @@ const props = defineProps({
   },
 });
 
-const { initMap, pins } = useMap(props);
+const { initMap } = useMap(props);
 
 onMounted(initMap);
 </script>

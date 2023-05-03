@@ -1,19 +1,23 @@
 import { defineStore } from 'pinia';
 
+export const makeURL = (
+  path: string,
+  query: Record<string, string>
+): string => {
+  const url = new URL(`${process.env.VUE_APP_API_URL}/${path}.json`);
+  if (url.pathname.endsWith('/')) {
+    url.pathname = url.pathname.substring(0, url.pathname.length - 1);
+  }
+  url.search = new URLSearchParams(query).toString();
+  return url.toString();
+};
+
 export const useApi = defineStore('api', {
   actions: {
-    async request({
-      path = '',
-      method = 'GET',
-      params,
-    }: {
-      path: string;
-      method: 'GET' | 'POST' | 'PUT' | 'DELETE';
-      params: any;
-    }) {
-      const request = await fetch(path, {
+    async request({ path = '', method = 'GET', body = null, query = {} }: any) {
+      const request = await fetch(makeURL(path, query), {
         method,
-        body: JSON.stringify(params),
+        body,
       });
 
       const data = await request.json();

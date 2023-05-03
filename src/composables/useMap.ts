@@ -42,6 +42,5 @@ export const useMap = (props: { editable: boolean }) => {
 
   return {
     initMap,
-    pins: mapStore.pins,
   };
 };

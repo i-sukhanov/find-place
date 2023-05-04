@@ -1,4 +1,7 @@
 import { defineStore } from 'pinia';
+import { GeocodingResultCollection } from '@/types/Map';
+
+const geoCodingApi = process.env.VUE_APP_GEOCODING_API_URL;
 
 export const makeURL = (
   path: string,
@@ -23,6 +26,15 @@ export const useApi = defineStore('api', {
       const data = await request.json();
 
       return data;
+    },
+    async geocodingRequest(query: string): Promise<GeocodingResultCollection> {
+      const request = await fetch(`${geoCodingApi}&query=${query}`, {
+        method: 'GET',
+      });
+
+      const data = await request.json();
+
+      return await data.data;
     },
   },
 });

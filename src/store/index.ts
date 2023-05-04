@@ -1,11 +1,13 @@
 import { defineStore } from 'pinia';
 import { PinCollection } from '@/types/Pin';
+import { GeocodingResultCollection } from '@/types/Map';
 import { useApi } from './api';
 
 export const useMapStore = defineStore('map', {
   state() {
     return {
       pins: [] as PinCollection,
+      results: [] as GeocodingResultCollection,
     };
   },
   actions: {
@@ -21,6 +23,11 @@ export const useMapStore = defineStore('map', {
         }),
         method: 'POST',
       });
+    },
+    async getCoords(query: string) {
+      const api = useApi();
+
+      return await api.geocodingRequest(query);
     },
   },
 });

@@ -5,18 +5,17 @@ export type MapClickEvent = {
 };
 
 export type GeocodingResult = {
-  latitude: number;
-  longitude: number;
-  name: string;
-  number: null;
-  postal_code: number;
-  street: string | null;
-  region: string;
-  region_code: string;
-  locality: string;
-  country: string;
-  country_code: string;
-  label: string;
+  place_id: string;
+  osm_type: string;
+  osm_id: string;
+  boundingbox: string[];
+  lat: string;
+  lon: string;
+  display_name: string;
+  class: string;
+  type: string;
+  importance: number;
+  icon: string | null;
 };
 
 export type GeocodingResultCollection = GeocodingResult[];

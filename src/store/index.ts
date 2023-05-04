@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { PinCollection } from '@/types/Pin';
 import { GeocodingResultCollection } from '@/types/Map';
-import { useApi } from './api';
+import { useApi } from '@/store/api';
 
 export const useMapStore = defineStore('map', {
   state() {
@@ -26,8 +26,12 @@ export const useMapStore = defineStore('map', {
     },
     async getCoords(query: string) {
       const api = useApi();
+      const places = await api.geocodingRequest(query);
+      const fitered = places.filter((p) =>
+        p.display_name.toLowerCase().includes('tbilisi')
+      );
 
-      return await api.geocodingRequest(query);
+      return fitered;
     },
   },
 });

@@ -42,22 +42,23 @@ export const useMap = (props: { editable: boolean }) => {
   }, 500);
 
   const handleResultClick = (result: GeocodingResult) => {
-    const latlng = [result.latitude, result.longitude];
+    const latlng = [Number(result.lat), Number(result.lon)];
 
     const markerInstance = marker(latlng, {
-      title: result.name,
+      title: result.display_name,
       icon: icon({
         iconUrl:
+          result.icon ??
           'http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/map-marker-icon.png',
         iconSize: [28, 28],
         iconAnchor: [17, 17],
       }),
     }).addTo(mapEl.value);
 
-    mapEl.value.flyTo(latlng, 18);
+    mapEl.value.flyTo(latlng, 16);
 
     const popupInstance = popup(latlng, {
-      content: result.label,
+      content: result.display_name,
     });
 
     markerInstance.bindPopup(popupInstance);

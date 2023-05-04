@@ -28,13 +28,17 @@ export const useApi = defineStore('api', {
       return data;
     },
     async geocodingRequest(query: string): Promise<GeocodingResultCollection> {
-      const request = await fetch(`${geoCodingApi}&query=${query}`, {
+      const request = await fetch(`${geoCodingApi}&q=${query}`, {
         method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          origin: '*',
+        },
       });
 
       const data = await request.json();
 
-      return await data.data;
+      return await data;
     },
   },
 });

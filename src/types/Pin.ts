@@ -4,6 +4,7 @@ export type Pin = {
   name: string;
   description?: string;
   tags?: string[];
+  icon: string;
 };
 
 export type PinCollection = Pin[];

@@ -29,7 +29,7 @@ export const useMap = (props: { editable: boolean } | null) => {
         ]);
       });
     } else {
-      console.log('error ');
+      console.error('Не удалось определить геолокацию');
     }
   };
 

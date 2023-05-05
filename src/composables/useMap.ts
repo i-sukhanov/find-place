@@ -22,7 +22,7 @@ export const useMap = (props: { editable: boolean } | null) => {
 
   const getLocation = () => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((data) => {
+      navigator.geolocation.watchPosition((data) => {
         userPositionMarker.value.setLatLng([
           data.coords.latitude,
           data.coords.longitude,
@@ -49,7 +49,7 @@ export const useMap = (props: { editable: boolean } | null) => {
     ).addTo(mapEl.value);
 
     mapStore.getPlaces();
-    setInterval(getLocation, 3000);
+    getLocation();
   };
 
   const search = useDebounceFn(async (event: any) => {

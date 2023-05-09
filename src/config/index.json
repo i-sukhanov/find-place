@@ -1,0 +1,9 @@
+{
+  "defaultIcon": "http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/map-marker-icon.png",
+  "userIcon": "https://cdn-icons-png.flaticon.com/512/106/106438.png",
+  "tileLayerLink": "https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png",
+  "mapCenter": [41.7151, 44.8271],
+  "iconSize": [28, 28],
+  "iconAnchor": [17, 17],
+  "offset": [-2.5, 2.5]
+}

@@ -5,13 +5,15 @@ import { useMapStore } from '@/store';
 import { useDebounceFn } from '@vueuse/core';
 import { SavePlaceForm, Pin } from '@/types/Pin';
 import { nanoid } from 'nanoid';
-
-const defaultIcon =
-  'http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/map-marker-icon.png';
-const userIcon = 'https://cdn-icons-png.flaticon.com/512/106/106438.png';
-const tileLayerLink =
-  'https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png';
-const mapCenter = [41.7151, 44.8271];
+import {
+  defaultIcon,
+  userIcon,
+  tileLayerLink,
+  mapCenter,
+  iconSize,
+  iconAnchor,
+  offset,
+} from '@/config/index.json';
 
 export const useMap = (props: { editable: boolean } | null) => {
   const mapEl = ref(null as typeof map);
@@ -43,8 +45,8 @@ export const useMap = (props: { editable: boolean } | null) => {
     userPositionMarker.value = marker(mapCenter, {
       icon: icon({
         iconUrl: userIcon,
-        iconSize: [28, 28],
-        iconAnchor: [17, 17],
+        iconSize,
+        iconAnchor,
       }),
     }).addTo(mapEl.value);
 
@@ -84,8 +86,8 @@ export const useMap = (props: { editable: boolean } | null) => {
       title: result.display_name,
       icon: icon({
         iconUrl: result.icon ?? defaultIcon,
-        iconSize: [28, 28],
-        iconAnchor: [17, 17],
+        iconSize,
+        iconAnchor,
       }),
     }).addTo(mapEl.value);
 
@@ -129,13 +131,14 @@ export const useMap = (props: { editable: boolean } | null) => {
             title: pin.name,
             icon: icon({
               iconUrl: defaultIcon,
-              iconSize: [28, 28],
-              iconAnchor: [17, 17],
+              iconSize,
+              iconAnchor,
             }),
           }).addTo(mapEl.value);
 
           const popupInstance = popup(pin.coords, {
-            content: pin.description,
+            content: `<b>${pin.name}</b></br><span>${pin.description}</span>`,
+            offset,
           });
 
           markerInstance.bindPopup(popupInstance);

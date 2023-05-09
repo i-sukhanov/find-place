@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { PinCollection, Pin } from '@/types/Pin';
-import { GeocodingResultCollection } from '@/types/Map';
+import { GeocodingResultCollection, GeocodingResult } from '@/types/Map';
 import { useApi } from '@/store/api';
 
 export const useMapStore = defineStore('map', {
@@ -33,7 +33,10 @@ export const useMapStore = defineStore('map', {
         method: 'GET',
       });
 
-      this.pins = Object.values(pins);
+      this.pins = Object.values(pins).map((pin: any, index: number) => ({
+        ...pin,
+        id: Object.keys(pins)[index],
+      }));
     },
     async getCoords(query: string) {
       const api = useApi();

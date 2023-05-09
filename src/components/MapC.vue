@@ -43,7 +43,6 @@ import { onMounted, defineProps, computed } from 'vue';
 import 'leaflet/dist/leaflet.css';
 import { useMap } from '@/composables/useMap';
 import MapDialog from '@/components/MapDialog.vue';
-import { nanoid } from 'nanoid';
 
 const props = defineProps({
   editable: {

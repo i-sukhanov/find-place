@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { PinCollection, Pin } from '@/types/Pin';
-import { GeocodingResultCollection, GeocodingResult } from '@/types/Map';
+import { GeocodingResultCollection } from '@/types/Map';
 import { useApi } from '@/store/api';
 
 export const useMapStore = defineStore('map', {

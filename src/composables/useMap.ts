@@ -1,19 +1,11 @@
 import { computed, ref, watch } from 'vue';
-import { tileLayer, map, icon, marker, popup } from 'leaflet';
+import { tileLayer, map, icon, marker, popup, Browser } from 'leaflet';
 import { MapClickEvent, GeocodingResult } from '@/types/Map';
 import { useMapStore } from '@/store';
 import { useDebounceFn } from '@vueuse/core';
 import { SavePlaceForm, Pin } from '@/types/Pin';
 import { nanoid } from 'nanoid';
-import {
-  defaultIcon,
-  userIcon,
-  tileLayerLink,
-  mapCenter,
-  iconSize,
-  iconAnchor,
-  offset,
-} from '@/config/index.json';
+import config from '@/config/index.json';
 
 export const useMap = (props: { editable: boolean } | null) => {
   const mapEl = ref(null as typeof map);
@@ -42,15 +34,15 @@ export const useMap = (props: { editable: boolean } | null) => {
     mapEl.value = map('map').setView([41.7151, 44.8271], 13);
     getLocation();
 
-    userPositionMarker.value = marker(mapCenter, {
+    userPositionMarker.value = marker(config.mapCenter, {
       icon: icon({
-        iconUrl: userIcon,
-        iconSize,
-        iconAnchor,
+        iconUrl: config.userIcon,
+        iconSize: config.iconSize,
+        iconAnchor: config.iconAnchor,
       }),
     }).addTo(mapEl.value);
 
-    tileLayer(tileLayerLink).addTo(mapEl.value);
+    tileLayer(config.tileLayerLink).addTo(mapEl.value);
 
     mapStore.getPlaces();
   };
@@ -85,9 +77,9 @@ export const useMap = (props: { editable: boolean } | null) => {
     const markerInstance = marker(latlng, {
       title: result.display_name,
       icon: icon({
-        iconUrl: result.icon ?? defaultIcon,
-        iconSize,
-        iconAnchor,
+        iconUrl: result.icon ?? config.defaultIcon,
+        iconSize: config.iconSize,
+        iconAnchor: config.iconAnchor,
       }),
     }).addTo(mapEl.value);
 
@@ -130,15 +122,15 @@ export const useMap = (props: { editable: boolean } | null) => {
           const markerInstance = marker(pin.coords, {
             title: pin.name,
             icon: icon({
-              iconUrl: defaultIcon,
-              iconSize,
-              iconAnchor,
+              iconUrl: config.defaultIcon,
+              iconSize: config.iconSize,
+              iconAnchor: config.iconAnchor,
             }),
           }).addTo(mapEl.value);
 
           const popupInstance = popup(pin.coords, {
             content: `<b>${pin.name}</b></br><span>${pin.description}</span>`,
-            offset,
+            offset: config.offset,
           });
 
           markerInstance.bindPopup(popupInstance);

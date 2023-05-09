@@ -42,7 +42,10 @@ export const useMapStore = defineStore('map', {
         p.display_name.toLowerCase().includes('tbilisi')
       );
 
-      return fitered;
+      this.results = fitered;
+    },
+    resetResults() {
+      this.results = [];
     },
   },
 });

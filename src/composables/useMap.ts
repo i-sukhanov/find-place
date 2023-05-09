@@ -8,6 +8,9 @@ import { nanoid } from 'nanoid';
 
 const defaultIcon =
   'http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/map-marker-icon.png';
+const userIcon = 'https://cdn-icons-png.flaticon.com/512/106/106438.png';
+const tileLayerLink =
+  'https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png';
 const mapCenter = [41.7151, 44.8271];
 
 export const useMap = (props: { editable: boolean } | null) => {
@@ -35,39 +38,44 @@ export const useMap = (props: { editable: boolean } | null) => {
 
   const initMap = (): void => {
     mapEl.value = map('map').setView([41.7151, 44.8271], 13);
+    getLocation();
 
     userPositionMarker.value = marker(mapCenter, {
       icon: icon({
-        iconUrl: 'https://cdn-icons-png.flaticon.com/512/106/106438.png',
+        iconUrl: userIcon,
         iconSize: [28, 28],
         iconAnchor: [17, 17],
       }),
     }).addTo(mapEl.value);
 
-    tileLayer(
-      'https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png'
-    ).addTo(mapEl.value);
+    tileLayer(tileLayerLink).addTo(mapEl.value);
 
     mapStore.getPlaces();
-    getLocation();
   };
 
-  const search = useDebounceFn(async (event: any) => {
-    if (event.target.value === '') {
-      mapStore.results = [];
-    } else if (event.target.value.length > 3) {
-      searching.value = true;
-
-      try {
-        mapStore.results = [];
-        const results = await mapStore.getCoords(event.target.value);
-
-        mapStore.results = results;
-      } finally {
-        searching.value = false;
+  const search = useDebounceFn(
+    async (
+      event: Event & {
+        target: HTMLInputElement;
       }
-    }
-  }, 500);
+    ) => {
+      const value = event.target.value;
+
+      if (value === '') {
+        mapStore.resetResults();
+      } else if (value.length > 3) {
+        searching.value = true;
+
+        try {
+          mapStore.resetResults();
+          await mapStore.getCoords(value);
+        } finally {
+          searching.value = false;
+        }
+      }
+    },
+    300
+  );
 
   const handleResultClick = (result: GeocodingResult) => {
     const latlng = [Number(result.lat), Number(result.lon)];

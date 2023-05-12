@@ -32,7 +32,7 @@
     <MapDialog
       v-if="showDialog && editable"
       @modal:close="showDialog = false"
-      @modal:submit="savePlace"
+      @modal:save="savePlace"
       class="absolute top-0 bottom-0 left-0 right-0 z-50"
     />
   </div>

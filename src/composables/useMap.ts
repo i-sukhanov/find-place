@@ -1,5 +1,5 @@
-import { computed, ref, watch } from 'vue';
-import { tileLayer, map, icon, marker, popup, Browser } from 'leaflet';
+import { computed, ref, watch, reactive } from 'vue';
+import { tileLayer, map, icon, marker, popup } from 'leaflet';
 import { MapClickEvent, GeocodingResult } from '@/types/Map';
 import { useMapStore } from '@/store';
 import { useDebounceFn } from '@vueuse/core';
@@ -14,6 +14,11 @@ export const useMap = (props: { editable: boolean } | null) => {
   const showDialog = ref(false);
   const coordsToSave = ref<[number, number] | null>(null);
   const userPositionMarker = ref<typeof marker>(null);
+  const form = reactive({
+    name: '',
+    description: '',
+    address: '',
+  });
 
   const results = computed(() => mapStore.results);
 
@@ -32,15 +37,18 @@ export const useMap = (props: { editable: boolean } | null) => {
 
   const initMap = (): void => {
     mapEl.value = map('map').setView([41.7151, 44.8271], 13);
-    getLocation();
 
-    userPositionMarker.value = marker(config.mapCenter, {
-      icon: icon({
-        iconUrl: config.userIcon,
-        iconSize: config.iconSize,
-        iconAnchor: config.iconAnchor,
-      }),
-    }).addTo(mapEl.value);
+    if (!props?.editable) {
+      getLocation();
+
+      userPositionMarker.value = marker(config.mapCenter, {
+        icon: icon({
+          iconUrl: config.userIcon,
+          iconSize: config.iconSize,
+          iconAnchor: config.iconAnchor,
+        }),
+      }).addTo(mapEl.value);
+    }
 
     tileLayer(config.tileLayerLink).addTo(mapEl.value);
 
@@ -87,8 +95,10 @@ export const useMap = (props: { editable: boolean } | null) => {
 
     if (props?.editable) {
       markerInstance.on('click', (event: MapClickEvent) => {
-        showDialog.value = true;
         coordsToSave.value = [event.latlng.lat, event.latlng.lng];
+        form.address = result.display_name;
+
+        showDialog.value = true;
       });
     } else {
       markerInstance.bindPopup(
@@ -128,12 +138,18 @@ export const useMap = (props: { editable: boolean } | null) => {
             }),
           }).addTo(mapEl.value);
 
-          const popupInstance = popup(pin.coords, {
-            content: `<b>${pin.name}</b></br><span>${pin.description}</span>`,
-            offset: config.offset,
-          });
+          if (!props?.editable) {
+            const popupInstance = popup(pin.coords, {
+              content: `<b>${pin.name}</b></br><span>${pin.description}</span>`,
+              offset: config.offset,
+            });
 
-          markerInstance.bindPopup(popupInstance);
+            markerInstance.bindPopup(popupInstance);
+          } else {
+            markerInstance.on('click', () => {
+              console.log(pin);
+            });
+          }
         });
       }
     },
@@ -150,5 +166,6 @@ export const useMap = (props: { editable: boolean } | null) => {
     results,
     searching,
     showDialog,
+    form,
   };
 };
